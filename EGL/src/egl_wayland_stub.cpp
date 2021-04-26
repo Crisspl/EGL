@@ -71,6 +71,11 @@ EGLBoolean __swapInterval(const EGLDisplayImpl* walkerDpy, EGLint interval)
     return EGL_FALSE;
 }
 
+EGLBoolean __getMaxSupportedAPIVersion(EGLenum api, EGLDisplayImpl* dpy)
+{
+    return EGL_FALSE;
+}
+
 EGLBoolean __getPlatformDependentHandles(void* out, const EGLDisplayImpl* walkerDpy, const NativeSurfaceContainer* nativeSurfaceContainer, const NativeContextContainer* nativeContextContainer)
 {
     return EGL_FALSE;

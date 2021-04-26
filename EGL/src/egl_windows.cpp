@@ -63,7 +63,7 @@ static LRESULT CALLBACK __DummyWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
      return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
-EGLBoolean __internalInit(NativeLocalStorageContainer* nativeLocalStorageContainer, EGLint* GL_max_supported, EGLint* ES_max_supported)
+EGLBoolean __internalInit(NativeLocalStorageContainer* nativeLocalStorageContainer)
 {
 	if (!nativeLocalStorageContainer)
 	{
@@ -217,68 +217,6 @@ EGLBoolean __internalInit(NativeLocalStorageContainer* nativeLocalStorageContain
 
 	wglMakeCurrent_PTR(NULL, NULL);
 #endif
-
-	EGLint attrib_list[] = {
-		WGL_CONTEXT_MAJOR_VERSION_ARB, 1,
-		WGL_CONTEXT_MINOR_VERSION_ARB, 0,
-		WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-		0
-	};
-
-	HGLRC testctx = NULL;
-	EGLint GL_major = 4, GL_minor = 6;
-	for (; GL_major >= 1 && !testctx; --GL_major)
-	{
-		for (; GL_minor >= 0 && !testctx; --GL_minor)
-		{
-			attrib_list[1] = GL_major;
-			attrib_list[3] = GL_minor;
-			testctx = wglCreateContextAttribsARB(nativeLocalStorageContainer->hdc, NULL, attrib_list);
-		}
-	}
-	++GL_major;
-	++GL_minor;
-
-	if (testctx)
-	{
-		wglDeleteContext_PTR(testctx);
-		testctx = NULL;
-	}
-	else
-	{
-		GL_major = 0;
-		GL_minor = 0;
-	}
-	GL_max_supported[0] = GL_major;
-	GL_max_supported[1] = GL_minor;
-
-
-	attrib_list[5] = WGL_CONTEXT_ES_PROFILE_BIT_EXT;
-	EGLint ES_major = 3, ES_minor = 2;
-	for (; ES_major >= 1 && !testctx; --ES_major)
-	{
-		for (; ES_minor >= 0 && !testctx; --ES_minor)
-		{
-			attrib_list[1] = ES_major;
-			attrib_list[3] = ES_minor;
-			testctx = wglCreateContextAttribsARB(nativeLocalStorageContainer->hdc, NULL, attrib_list);
-		}
-	}
-	++ES_major;
-	++ES_minor;
-
-	if (testctx)
-	{
-		wglDeleteContext_PTR(testctx);
-		testctx = NULL;
-	}
-	else
-	{
-		ES_major = 0;
-		ES_minor = 0;
-	}
-	ES_max_supported[0] = ES_major;
-	ES_max_supported[1] = ES_minor;
 
 	return EGL_TRUE;
 }
@@ -1167,6 +1105,52 @@ EGLBoolean __swapInterval(const EGLDisplayImpl* walkerDpy, EGLint interval)
 	}
 
 	return (EGLBoolean)wglSwapIntervalEXT(interval);
+}
+
+EGLBoolean __getMaxSupportedAPIVersion(EGLenum api, EGLDisplayImpl* dpy)
+{
+	const EGLBoolean isES = (api == EGL_OPENGL_ES_API);
+
+	EGLint profile = isES ? WGL_CONTEXT_ES_PROFILE_BIT_EXT : WGL_CONTEXT_CORE_PROFILE_BIT_ARB;
+	EGLint attrib_list[] = {
+		WGL_CONTEXT_MAJOR_VERSION_ARB, 1,
+		WGL_CONTEXT_MINOR_VERSION_ARB, 0,
+		WGL_CONTEXT_PROFILE_MASK_ARB, profile,
+		0
+	};
+
+	HGLRC testctx = NULL;
+	EGLint GL_major = isES ? 3 : 4;
+	EGLint GL_minor = isES ? 2 : 6;
+	for (; GL_major >= 1 && !testctx; --GL_major)
+	{
+		for (; GL_minor >= 0 && !testctx; --GL_minor)
+		{
+			attrib_list[1] = GL_major;
+			attrib_list[3] = GL_minor;
+			testctx = wglCreateContextAttribsARB(dpy->display_id, NULL, attrib_list);
+		}
+	}
+	++GL_major;
+	++GL_minor;
+
+	EGLBoolean retval = testctx != NULL;
+
+	if (testctx)
+	{
+		wglDeleteContext_PTR(testctx);
+		testctx = NULL;
+	}
+	else
+	{
+		GL_major = 0;
+		GL_minor = 0;
+	}
+	
+	dpy->maxAPI_major = GL_major;
+	dpy->maxAPI_minor = GL_minor;
+
+	return retval;
 }
 
 EGLBoolean __getPlatformDependentHandles(void* _out, const EGLDisplayImpl* walkerDpy, const NativeSurfaceContainer* nativeSurfaceContainer, const NativeContextContainer* nativeContextContainer)

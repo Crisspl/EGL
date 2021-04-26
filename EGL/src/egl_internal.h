@@ -323,6 +323,9 @@ typedef struct _EGLDisplayImpl
 	EGLSurfaceImpl* currentRead;
 	EGLContextImpl* currentCtx;
 
+	EGLint maxAPI_major;
+	EGLint maxAPI_minor;
+
 	struct _EGLDisplayImpl* next;
 
 } EGLDisplayImpl;
@@ -347,7 +350,7 @@ void _eglInternalSetDefaultConfig(EGLConfigImpl* config);
 
 //
 
-EGLBoolean __internalInit(NativeLocalStorageContainer* nativeLocalStorageContainer, EGLint* GL_max_supported, EGLint* ES_max_supported);
+EGLBoolean __internalInit(NativeLocalStorageContainer* nativeLocalStorageContainer);
 
 EGLBoolean __internalTerminate(NativeLocalStorageContainer* nativeLocalStorageContainer);
 
@@ -372,6 +375,8 @@ EGLBoolean __makeCurrent(const EGLDisplayImpl* walkerDpy, const NativeSurfaceCon
 EGLBoolean __swapBuffers(const EGLDisplayImpl* walkerDpy, const EGLSurfaceImpl* walkerSurface);
 
 EGLBoolean __swapInterval(const EGLDisplayImpl* walkerDpy, EGLint interval);
+
+EGLBoolean __getMaxSupportedAPIVersion(EGLenum api, EGLDisplayImpl* dpy);
 
 EGLBoolean __getPlatformDependentHandles(void* out, const EGLDisplayImpl* walkerDpy, const NativeSurfaceContainer* nativeSurfaceContainer, const NativeContextContainer* nativeContextContainer);
 
