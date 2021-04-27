@@ -1,27 +1,22 @@
 cmake_minimum_required(VERSION 3.0.2)
 
-if (UNIX AND NOT APPLE)
-# Defines stub functions using typedefs for Wayland display server protocol
-  option(EGL_UNIX_USE_WAYLAND "Define functions for Wayland platform" OFF)
-endif()
+option(EGL_PASSTHROUGH "Build passthrough implementation (loads functions from libEGL.so and passes every call to them)" OFF)
+option(EGL_USE_WAYLAND "Build passthrough functions for Wayland platform (has any meaning only if EGL_PASSTHROUGH is ON)" OFF)
 
-if(WIN32)
-  set(EGL_PLATFORM_SOURCES
-      ${CMAKE_CURRENT_LIST_DIR}/src/egl_windows.cpp)
-else()
-  if(UNIX AND NOT APPLE)
-    if (ANDROID OR EGL_UNIX_USE_WAYLAND)
-      set(EGL_PLATFORM_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/egl_wayland_stub.cpp)
-    else()
+if (NOT EGL_PASSTHROUGH)
+    if(WIN32)
       set(EGL_PLATFORM_SOURCES
-          ${CMAKE_CURRENT_LIST_DIR}/src/egl_x11.cpp)
+          ${CMAKE_CURRENT_LIST_DIR}/src/egl_windows.cpp ${CMAKE_CURRENT_LIST_DIR}/src/egl.c ${CMAKE_CURRENT_LIST_DIR}/src/egl_common.cpp)
+    elseif(UNIX AND NOT APPLE AND NOT ANDROID)
+      set(EGL_PLATFORM_SOURCES
+          ${CMAKE_CURRENT_LIST_DIR}/src/egl_x11.cpp ${CMAKE_CURRENT_LIST_DIR}/src/egl.c ${CMAKE_CURRENT_LIST_DIR}/src/egl_common.cpp)
     endif()
-  endif()
+else()
+  set(EGL_PLATFORM_SOURCES
+      ${CMAKE_CURRENT_LIST_DIR}/src/egl_passthrough.c)
 endif()
 
 set(EGL_SOURCES
-    ${CMAKE_CURRENT_LIST_DIR}/src/egl.c
-    ${CMAKE_CURRENT_LIST_DIR}/src/egl_common.cpp
     ${EGL_PLATFORM_SOURCES}
     ${CMAKE_CURRENT_LIST_DIR}/src/egl_internal.h
     ${CMAKE_CURRENT_LIST_DIR}/include/EGL/egl.h
@@ -41,6 +36,6 @@ option(EGL_NO_GLEW "Do not use GLEW" OFF)
 if(EGL_NO_GLEW)
   add_definitions(-DEGL_NO_GLEW)
 endif()
-if(UNIX AND NOT APPLE AND EGL_UNIX_USE_WAYLAND)
+if(EGL_PASSTHROUGH AND EGL_USE_WAYLAND)
   add_definitions(-DWL_EGL_PLATFORM)
 endif()
