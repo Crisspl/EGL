@@ -1197,7 +1197,7 @@ EGLBoolean __getMaxSupportedAPIVersion(EGLenum api, EGLDisplayImpl* dpy)
 	int count;
 	GLXFBConfig config = NULL;
 	{
-		GLXFBConfig* configs = glXGetFBConfigs_PTR(nativeLocalStorageContainer->display, 0, &count);
+		GLXFBConfig* configs = glXGetFBConfigs_PTR(dpy->display_id, 0, &count);
 		config = configs[0];
 		XFree_PTR(configs);
 	}
@@ -1211,7 +1211,7 @@ EGLBoolean __getMaxSupportedAPIVersion(EGLenum api, EGLDisplayImpl* dpy)
 		{
 			attrib_list[1] = GL_major;
 			attrib_list[3] = GL_minor;
-			testctx = glXCreateContextAttribsARB_PTR(nativeLocalStorageContainer->display, config, NULL, True, attrib_list);
+			testctx = glXCreateContextAttribsARB_PTR(dpy->display_id, config, NULL, True, attrib_list);
 		}
 	}
 	++GL_major;
@@ -1221,7 +1221,7 @@ EGLBoolean __getMaxSupportedAPIVersion(EGLenum api, EGLDisplayImpl* dpy)
 
 	if (testctx)
 	{
-		wglDeleteContext_PTR(testctx);
+		glXDestroyContext_PTR(testctx);
 		testctx = NULL;
 	}
 	else
