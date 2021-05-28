@@ -106,58 +106,64 @@ static EGLBoolean _initFunctionPointers()
 		return EGL_FALSE;
 
 #define _LOAD_EGL_FN_PTR(fname, fptr_t) fname ## _PTR = (fptr_t) dlsym(g_libegl, #fname)
+#define _LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(fname, fptr_t) \
+	_LOAD_EGL_FN_PTR(fname, fptr_t);\
+	if (fname ## _PTR == NULL) {\
+		return EGL_FALSE;\
+	}
 
-	_LOAD_EGL_FN_PTR(eglChooseConfig, PFNEGLCHOOSECONFIG);
-	_LOAD_EGL_FN_PTR(eglCopyBuffers, PFNEGLCOPYBUFFERS);
-	_LOAD_EGL_FN_PTR(eglCreateContext, PFNEGLCREATECONTEXT);
-	_LOAD_EGL_FN_PTR(eglCreatePbufferSurface, PFNEGLCREATEPBUFFERSURFACE);
-	_LOAD_EGL_FN_PTR(eglCreatePixmapSurface, PFNEGLCREATEPIXMAPSURFACE);
-	_LOAD_EGL_FN_PTR(eglCreateWindowSurface, PFNEGLCREATEWINDOWSURFACE);
-	_LOAD_EGL_FN_PTR(eglDestroyContext, PFNEGLDESTROYCONTEXT);
-	_LOAD_EGL_FN_PTR(eglDestroySurface, PFNEGLDESTROYSURFACE);
-	_LOAD_EGL_FN_PTR(eglGetConfigAttrib, PFNEGLGETCONFIGATTRIB);
-	_LOAD_EGL_FN_PTR(eglGetConfigs, PFNEGLGETCONFIGS);
-	_LOAD_EGL_FN_PTR(eglGetCurrentDisplay, PFNEGLGETCURRENTDISPLAY);
-	_LOAD_EGL_FN_PTR(eglGetCurrentSurface, PFNEGLGETCURRENTSURFACE);
-	_LOAD_EGL_FN_PTR(eglGetDisplay, PFNEGLGETDISPLAY);
-	_LOAD_EGL_FN_PTR(eglGetError, PFNEGLGETERROR);
-	_LOAD_EGL_FN_PTR(eglGetProcAddress, PFNEGLGETPROCADDRESS);
-	_LOAD_EGL_FN_PTR(eglInitialize, PFNEGLINITIALIZE);
-	_LOAD_EGL_FN_PTR(eglMakeCurrent, PFNEGLMAKECURRENT);
-	_LOAD_EGL_FN_PTR(eglQueryContext, PFNEGLQUERYCONTEXT);
-	_LOAD_EGL_FN_PTR(eglQueryString, PFNEGLQUERYSTRING);
-	_LOAD_EGL_FN_PTR(eglQuerySurface, PFNEGLQUERYSURFACE);
-	_LOAD_EGL_FN_PTR(eglSwapBuffers, PFNEGLSWAPBUFFERS);
-	_LOAD_EGL_FN_PTR(eglTerminate, PFNEGLTERMINATE);
-	_LOAD_EGL_FN_PTR(eglWaitGL, PFNEGLWAITGL);
-	_LOAD_EGL_FN_PTR(eglWaitNative, PFNEGLWAITNATIVE);
-	_LOAD_EGL_FN_PTR(eglBindTexImage, PFNEGLBINDTEXIMAGE);
-	_LOAD_EGL_FN_PTR(eglReleaseTexImage, PFNEGLRELEASETEXIMAGE);
-	_LOAD_EGL_FN_PTR(eglSurfaceAttrib, PFNEGLSURFACEATTRIB);
-	_LOAD_EGL_FN_PTR(eglSwapInterval, PFNEGLSWAPINTERVAL);
-	_LOAD_EGL_FN_PTR(eglBindAPI, PFNEGLBINDAPI);
-	_LOAD_EGL_FN_PTR(eglQueryAPI, PFNEGLQUERYAPI);
-	_LOAD_EGL_FN_PTR(eglCreatePbufferFromClientBuffer, PFNEGLCREATEPBUFFERFROMCLIENTBUFFER);
-	_LOAD_EGL_FN_PTR(eglReleaseThread, PFNEGLRELEASETHREAD);
-	_LOAD_EGL_FN_PTR(eglWaitClient, PFNEGLWAITCLIENT);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglChooseConfig, PFNEGLCHOOSECONFIG);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglCopyBuffers, PFNEGLCOPYBUFFERS);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglCreateContext, PFNEGLCREATECONTEXT);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglCreatePbufferSurface, PFNEGLCREATEPBUFFERSURFACE);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglCreatePixmapSurface, PFNEGLCREATEPIXMAPSURFACE);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglCreateWindowSurface, PFNEGLCREATEWINDOWSURFACE);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglDestroyContext, PFNEGLDESTROYCONTEXT);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglDestroySurface, PFNEGLDESTROYSURFACE);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglGetConfigAttrib, PFNEGLGETCONFIGATTRIB);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglGetConfigs, PFNEGLGETCONFIGS);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglGetCurrentDisplay, PFNEGLGETCURRENTDISPLAY);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglGetCurrentSurface, PFNEGLGETCURRENTSURFACE);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglGetDisplay, PFNEGLGETDISPLAY);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglGetError, PFNEGLGETERROR);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglGetProcAddress, PFNEGLGETPROCADDRESS);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglInitialize, PFNEGLINITIALIZE);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglMakeCurrent, PFNEGLMAKECURRENT);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglQueryContext, PFNEGLQUERYCONTEXT);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglQueryString, PFNEGLQUERYSTRING);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglQuerySurface, PFNEGLQUERYSURFACE);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglSwapBuffers, PFNEGLSWAPBUFFERS);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglTerminate, PFNEGLTERMINATE);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglWaitGL, PFNEGLWAITGL);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglWaitNative, PFNEGLWAITNATIVE);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglBindTexImage, PFNEGLBINDTEXIMAGE);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglReleaseTexImage, PFNEGLRELEASETEXIMAGE);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglSurfaceAttrib, PFNEGLSURFACEATTRIB);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglSwapInterval, PFNEGLSWAPINTERVAL);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglBindAPI, PFNEGLBINDAPI);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglQueryAPI, PFNEGLQUERYAPI);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglCreatePbufferFromClientBuffer, PFNEGLCREATEPBUFFERFROMCLIENTBUFFER);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglReleaseThread, PFNEGLRELEASETHREAD);
+	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglWaitClient, PFNEGLWAITCLIENT);
 
 #define _LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(fname, fptr_t) \
 	_LOAD_EGL_FN_PTR(fname, fptr_t);\
-	if (fname ## _PTR == NULL)\
-		return EGL_FALSE
+	if (fname ## _PTR == NULL) {\
+		return EGL_FALSE;\
+	}
 
 	// EGL >=1.3 functions:
-	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglGetCurrentContext, PFNEGLGETCURRENTCONTEXT);
-	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglCreateSync, PFNEGLCREATESYNC);
-	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglDestroySync, PFNEGLDESTROYSYNC);
-	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglClientWaitSync, PFNEGLCLIENTWAITSYNC);
-	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglGetSyncAttrib, PFNEGLGETSYNCATTRIB);
-	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglCreateImage, PFNEGLCREATEIMAGE);
-	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglDestroyImage, PFNEGLDESTROYIMAGE);
-	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglGetPlatformDisplay, PFNEGLGETPLATFORMDISPLAY);
-	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglCreatePlatformWindowSurface, PFNEGLCREATEPLATFORMWINDOWSURFACE);
-	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglCreatePlatformPixmapSurface, PFNEGLCREATEPLATFORMPIXMAPSURFACE);
-	_LOAD_EGL_FN_PTR_RETURN_ON_FAILURE(eglWaitSync, PFNEGLWAITSYNC);
+	_LOAD_EGL_FN_PTR(eglGetCurrentContext, PFNEGLGETCURRENTCONTEXT);
+	_LOAD_EGL_FN_PTR(eglCreateSync, PFNEGLCREATESYNC);
+	_LOAD_EGL_FN_PTR(eglDestroySync, PFNEGLDESTROYSYNC);
+	_LOAD_EGL_FN_PTR(eglClientWaitSync, PFNEGLCLIENTWAITSYNC);
+	_LOAD_EGL_FN_PTR(eglGetSyncAttrib, PFNEGLGETSYNCATTRIB);
+	_LOAD_EGL_FN_PTR(eglCreateImage, PFNEGLCREATEIMAGE);
+	_LOAD_EGL_FN_PTR(eglDestroyImage, PFNEGLDESTROYIMAGE);
+	_LOAD_EGL_FN_PTR(eglGetPlatformDisplay, PFNEGLGETPLATFORMDISPLAY);
+	_LOAD_EGL_FN_PTR(eglCreatePlatformWindowSurface, PFNEGLCREATEPLATFORMWINDOWSURFACE);
+	_LOAD_EGL_FN_PTR(eglCreatePlatformPixmapSurface, PFNEGLCREATEPLATFORMPIXMAPSURFACE);
+	_LOAD_EGL_FN_PTR(eglWaitSync, PFNEGLWAITSYNC);
 
 #undef _LOAD_EGL_FN_PTR_RETURN_ON_FAILURE
 #undef _LOAD_EGL_FN_PTR
@@ -364,6 +370,8 @@ EGLAPI EGLBoolean EGLAPIENTRY eglWaitClient(void)
 
 EGLAPI EGLContext EGLAPIENTRY eglGetCurrentContext(void)
 {
+	if (!eglGetCurrentContext_PTR)
+		return EGL_NO_CONTEXT;
 	return eglGetCurrentContext_PTR();
 }
 
@@ -373,50 +381,70 @@ EGLAPI EGLContext EGLAPIENTRY eglGetCurrentContext(void)
 
 EGLAPI EGLSync EGLAPIENTRY eglCreateSync(EGLDisplay dpy, EGLenum type, const EGLAttrib* attrib_list)
 {
+	if (!eglCreateSync_PTR)
+		return EGL_NO_SYNC;
 	return eglCreateSync_PTR(dpy, type, attrib_list);
 }
 
 EGLAPI EGLBoolean EGLAPIENTRY eglDestroySync(EGLDisplay dpy, EGLSync sync)
 {
+	if (!eglDestroySync_PTR)
+		return EGL_FALSE;
 	return eglDestroySync_PTR(dpy, sync);
 }
 
 EGLAPI EGLint EGLAPIENTRY eglClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags, EGLTime timeout)
 {
+	if (!eglClientWaitSync_PTR)
+		return EGL_FALSE;
 	return eglClientWaitSync_PTR(dpy, sync, flags, timeout);
 }
 
 EGLAPI EGLBoolean EGLAPIENTRY eglGetSyncAttrib(EGLDisplay dpy, EGLSync sync, EGLint attribute, EGLAttrib* value)
 {
+	if (!eglGetSyncAttrib_PTR)
+		return EGL_FALSE;
 	return eglGetSyncAttrib_PTR(dpy, sync, attribute, value);
 }
 
 EGLAPI EGLImage EGLAPIENTRY eglCreateImage(EGLDisplay dpy, EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLint* attrib_list)
 {
+	if (!eglCreateImage_PTR)
+		return EGL_NO_IMAGE;
 	return eglCreateImage_PTR(dpy, ctx, target, buffer, attrib_list);
 }
 
 EGLAPI EGLBoolean EGLAPIENTRY eglDestroyImage(EGLDisplay dpy, EGLImage image)
 {
+	if (!eglDestroyImage_PTR)
+		return EGL_FALSE;
 	return eglDestroyImage_PTR(dpy, image);
 }
 
 EGLAPI EGLDisplay EGLAPIENTRY eglGetPlatformDisplay(EGLenum platform, void* native_display, const EGLAttrib* attrib_list)
 {
+	if (!eglGetPlatformDisplay_PTR)
+		return EGL_NO_DISPLAY;
 	return eglGetPlatformDisplay_PTR(platform, native_display, attrib_list);
 }
 
 EGLAPI EGLSurface EGLAPIENTRY eglCreatePlatformWindowSurface(EGLDisplay dpy, EGLConfig config, void* native_window, const EGLAttrib* attrib_list)
 {
+	if (!eglCreatePlatformWindowSurface_PTR)
+		return EGL_NO_SURFACE;
 	return eglCreatePlatformWindowSurface_PTR(dpy, config, native_window, attrib_list);
 }
 
 EGLAPI EGLSurface EGLAPIENTRY eglCreatePlatformPixmapSurface(EGLDisplay dpy, EGLConfig config, void* native_pixmap, const EGLAttrib* attrib_list)
 {
+	if (!eglCreatePlatformPixmapSurface_PTR)
+		return EGL_NO_SURFACE;
 	return eglCreatePlatformPixmapSurface_PTR(dpy, config, native_pixmap, attrib_list);
 }
 
 EGLAPI EGLBoolean EGLAPIENTRY eglWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags)
 {
+	if (!eglWaitSync_PTR)
+		return EGL_FALSE;
 	return eglWaitSync_PTR(dpy, sync, flags);
 }
